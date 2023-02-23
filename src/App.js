@@ -58,7 +58,17 @@ function App() {
       .attr("cy", function(d) { return y(d.y) })
       .attr("r", 4)
 
+    svg.append("path")
+    .data([data])
+    .attr("class", "line")
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 1.5)
+    .attr("d", valueLine);
+
   }
+
+  
 
   useEffect(() => {
     createGraph();
