@@ -11,14 +11,13 @@ import './App.css';
 function App() {
   
   const svgRef = useRef();
+  const btnRef = useRef();
   const createGraph = async () => {
 
-    
     data.forEach((d) => {
       d.x = d.x;
       d.y = d.y;
     });
-    console.log(data)
     
     // set the dimensions and margins of the graph
     const margin = { top: 20, right: 20, bottom: 50, left: 70 },
@@ -47,13 +46,12 @@ function App() {
     svg.append("g")
       .call(d3.axisLeft(y));
       
-      // add the Line
+    // add the Line
       var valueLine = d3.line()
     .x((d) => { return x(d.x); })
     .y((d) => { return y(d.y); });
 
     // add points
-
     svg.selectAll("myCircles")
     .data(data)
     .enter()
@@ -65,7 +63,7 @@ function App() {
       .attr("r", 4)
 
 
-    // grids
+    // add grids
     const xAxisGrid = d3_axisBottom(x).tickSize(-height).tickFormat('').ticks(10);
     const yAxisGrid = d3_axisLeft(y).tickSize(-width).tickFormat('').ticks(10);
 
@@ -77,13 +75,16 @@ function App() {
       .attr('class', 'y axis-grid')
       .call(yAxisGrid);
 
+    // change colors button
+    const colors = ['#eff5fb', '#f1e4e7', '#fcf2ee', '#fff3d6', '#f3cece']
+
 
     svg.append("path")
     .data([data])
     .attr("class", "line")
     .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
+    .attr("stroke", "rgb(132, 230, 252)")
+    .attr("stroke-width", 2)
     .attr("d", valueLine);
     
   }
@@ -95,9 +96,10 @@ function App() {
   }, []);
 
   return (
-    <>
+    <main>
       <svg ref={svgRef}></svg>
-    </>
+      <button ref={btnRef}>Change color</button>
+    </main>
   );
 }
 
