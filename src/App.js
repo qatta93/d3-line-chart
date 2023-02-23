@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import * as d3 from "d3";
 import {
   axisBottom  as d3_axisBottom,
@@ -12,6 +12,8 @@ function App() {
   
   const svgRef = useRef();
   const btnRef = useRef();
+  const colors = ['#ffffff', '#eff5fb', '#f1e4e7', '#fcf2ee', '#fff3d6', '#f3cece']
+
   const createGraph = async () => {
 
     data.forEach((d) => {
@@ -76,8 +78,18 @@ function App() {
       .call(yAxisGrid);
 
     // change colors button
-    const colors = ['#eff5fb', '#f1e4e7', '#fcf2ee', '#fff3d6', '#f3cece']
 
+    const button = d3.select(btnRef.current)
+    let colorIndex = 0;
+    button.on("click", function() {
+      if(colorIndex >= colors.length - 1){
+        colorIndex = 0;
+        d3.select(svgRef.current).style("background-color", colors[colorIndex]);
+        return 
+      }
+      colorIndex++
+      d3.select(svgRef.current).style("background-color", colors[colorIndex]);
+    });
 
     svg.append("path")
     .data([data])
