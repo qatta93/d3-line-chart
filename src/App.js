@@ -45,14 +45,18 @@ function App() {
     var valueLine = d3.line()
     .x((d) => { return x(d.x); })
     .y((d) => { return y(d.y); });
-  
-    svg.append("path")
-      .data([data])
-      .attr("class", "line")
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", valueLine);
+
+    // add points
+
+    svg.selectAll("myCircles")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("fill", "red")
+      .attr("stroke", "none")
+      .attr("cx", function(d) { return x(d.x) })
+      .attr("cy", function(d) { return y(d.y) })
+      .attr("r", 4)
 
   }
 
