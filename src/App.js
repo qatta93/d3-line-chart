@@ -81,50 +81,56 @@ function App() {
         .attr("class","mouseCircle")
         .attr("fill", "red")
         .attr("stroke", "none")
-        .attr("x", function(d) { return d.x })
-        .attr("y", function(d) { return d.y })
         .attr("cx", function(d) { return x(d.x) })
         .attr("cy", function(d) { return y(d.y) })
         .attr("r", 4)
-
       
     // add drop lines
+    svg.append("line")
+      .attr("class","mouseLineHorizontal")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 0)
+      .attr("y2", 0)
+      .style("stroke-width", 1)
+      .style("stroke", "green")
+      .style("fill", "none")
+      .style("opacity", "1");
 
-    const verticalLine = (cx, cy, opacity) => {
-      return svg.append("line")
-        .attr("x1", cx)
-        .attr("y1", height)
-        .attr("x2", cx)
-        .attr("y2", cy)
-        .style("stroke-width", 1)
-        .style("stroke", "green")
-        .style("fill", "none")
-        .style('opacity', opacity);
-    }
-    const horizontalLine = (cx, cy, opacity) => {
-      return svg.append("line")
-        .attr("x1", cx)
-        .attr("y1", cy)
-        .attr("x2", 0)
-        .attr("y2", cy)
-        .style("stroke-width", 1)
-        .style("stroke", "green")
-        .style("fill", "none")
-        .style('opacity', opacity);
-    }
+    svg.append("line")
+      .attr("class","mouseLineVertical")
+      .attr("x1", 0)
+      .attr("y1", height)
+      .attr("x2", 0)
+      .attr("y2", 0)
+      .style("stroke-width", 1)
+      .style("stroke", "green")
+      .style("fill", "none")
+      .style("opacity", "0");
 
     circles.on('mouseover', function () {
-        d3.select(this).attr("fill", "green")
-        verticalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 1)
-        horizontalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 1);
+      d3.select(this).attr("fill", "green")
+      d3.select(".mouseLineHorizontal")
+      .attr("x1", d3.select(this).attr("cx"))
+      .attr("y1", d3.select(this).attr("cy"))
+      .attr("y2", d3.select(this).attr("cy"))
+      .style("opacity", "1")
+      d3.select(".mouseLineVertical")
+      .attr("x1", d3.select(this).attr("cx"))
+      .attr("x2", d3.select(this).attr("cx"))
+      .attr("y2", d3.select(this).attr("cy"))
+      .style("opacity", "1")
     })
+
     circles.on('mouseout', function () {
-      verticalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 0)
-      horizontalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 0);
+      d3.select(this).attr("fill", "red")
+      d3.select(".mouseLineHorizontal")
+        .style("opacity", "0");
+      d3.select(".mouseLineVertical")
+        .style("opacity", "0");
     })
 
     // change colors button
-
     const button = d3.select(btnRef.current)
     let colorIndex = 0;
     button.on("click", function() {
