@@ -88,35 +88,27 @@ function App() {
     // add drop lines
     svg.append("line")
       .attr("class","mouseLineHorizontal")
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", 0)
-      .attr("y2", 0)
       .style("stroke-width", 1)
       .style("stroke", "green")
       .style("fill", "none")
-      .style("opacity", "1");
 
     svg.append("line")
       .attr("class","mouseLineVertical")
-      .attr("x1", 0)
-      .attr("y1", height)
-      .attr("x2", 0)
-      .attr("y2", 0)
       .style("stroke-width", 1)
       .style("stroke", "green")
       .style("fill", "none")
-      .style("opacity", "0");
 
     circles.on('mouseover', function () {
       d3.select(this).attr("fill", "green")
       d3.select(".mouseLineHorizontal")
       .attr("x1", d3.select(this).attr("cx"))
       .attr("y1", d3.select(this).attr("cy"))
+      .attr("x2", 0)
       .attr("y2", d3.select(this).attr("cy"))
       .style("opacity", "1")
       d3.select(".mouseLineVertical")
       .attr("x1", d3.select(this).attr("cx"))
+      .attr("y1", height)
       .attr("x2", d3.select(this).attr("cx"))
       .attr("y2", d3.select(this).attr("cy"))
       .style("opacity", "1")
