@@ -6,15 +6,17 @@ main {
   stroke: rgb(237, 235, 235);
 }
 
-svg {
-}
-
-
 button {
   display: block;
+  cursor: pointer;
   height: 50px;
   width: 100px;
+  border: none;
   border-radius: 5px;
   background-color: rgb(132, 230, 252);
-  margin-left: 450px;
+  margin-left: 400px;
+}
+
+button:hover {
+  background-color: rgb(102, 199, 221);
 }

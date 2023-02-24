@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef} from 'react'
 import * as d3 from "d3";
 import {
   axisBottom  as d3_axisBottom,
@@ -23,16 +23,16 @@ function App() {
     
     // set the dimensions and margins of the graph
     const margin = { top: 20, right: 20, bottom: 50, left: 70 },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 860 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
 
     
     // append the svg object to the body of the page
     const svg = d3.select(svgRef.current)
-    .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // add X axis and Y axis
     const x = d3.scaleTime().range([0, width]);
@@ -47,23 +47,6 @@ function App() {
 
     svg.append("g")
       .call(d3.axisLeft(y));
-      
-    // add the Line
-      var valueLine = d3.line()
-    .x((d) => { return x(d.x); })
-    .y((d) => { return y(d.y); });
-
-    // add points
-    svg.selectAll("myCircles")
-    .data(data)
-    .enter()
-    .append("circle")
-      .attr("fill", "red")
-      .attr("stroke", "none")
-      .attr("cx", function(d) { return x(d.x) })
-      .attr("cy", function(d) { return y(d.y) })
-      .attr("r", 4)
-
 
     // add grids
     const xAxisGrid = d3_axisBottom(x).tickSize(-height).tickFormat('').ticks(10);
@@ -76,6 +59,69 @@ function App() {
     svg.append('g')
       .attr('class', 'y axis-grid')
       .call(yAxisGrid);
+      
+    // add the Line
+    var valueLine = d3.line()
+      .x((d) => { return x(d.x); })
+      .y((d) => { return y(d.y); });
+
+    svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "rgb(132, 230, 252)")
+      .attr("stroke-width", 2)
+      .attr("d", valueLine);
+
+    // add points
+    const circles = svg.selectAll("myCircles")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("class","mouseCircle")
+        .attr("fill", "red")
+        .attr("stroke", "none")
+        .attr("x", function(d) { return d.x })
+        .attr("y", function(d) { return d.y })
+        .attr("cx", function(d) { return x(d.x) })
+        .attr("cy", function(d) { return y(d.y) })
+        .attr("r", 4)
+
+      
+    // add drop lines
+
+    const verticalLine = (cx, cy, opacity) => {
+      return svg.append("line")
+        .attr("x1", cx)
+        .attr("y1", height)
+        .attr("x2", cx)
+        .attr("y2", cy)
+        .style("stroke-width", 1)
+        .style("stroke", "green")
+        .style("fill", "none")
+        .style('opacity', opacity);
+    }
+    const horizontalLine = (cx, cy, opacity) => {
+      return svg.append("line")
+        .attr("x1", cx)
+        .attr("y1", cy)
+        .attr("x2", 0)
+        .attr("y2", cy)
+        .style("stroke-width", 1)
+        .style("stroke", "green")
+        .style("fill", "none")
+        .style('opacity', opacity);
+    }
+
+    circles.on('mouseover', function () {
+        d3.select(this).attr("fill", "green")
+        verticalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 1)
+        horizontalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 1);
+    })
+    circles.on('mouseout', function () {
+      verticalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 0)
+      horizontalLine(d3.select(this).attr("cx"), d3.select(this).attr("cy"), 0);
+    })
 
     // change colors button
 
@@ -90,18 +136,7 @@ function App() {
       colorIndex++
       d3.select(svgRef.current).style("background-color", colors[colorIndex]);
     });
-
-    svg.append("path")
-    .data([data])
-    .attr("class", "line")
-    .attr("fill", "none")
-    .attr("stroke", "rgb(132, 230, 252)")
-    .attr("stroke-width", 2)
-    .attr("d", valueLine);
-    
   }
-
-  
 
   useEffect(() => {
     createGraph();
